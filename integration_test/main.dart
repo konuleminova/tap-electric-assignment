@@ -4,23 +4,24 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:weathet_app/data/models/weather_forecast_hourly.dart';
-import 'package:weathet_app/data/repositories/weather_repository.dart';
+import 'package:weathet_app/features/weather/domain/models/weather_forecast_hourly.dart';
+import 'package:weathet_app/features/weather/data/repositories/weather_repository.dart';
 import 'package:weathet_app/di/di.dart';
-import 'package:weathet_app/features/weather/weather.dart';
-import 'package:weathet_app/ui/widgets/app/my_app.dart';
+import 'package:weathet_app/features/weather/presentation/screens/app/my_app.dart';
+import 'package:weathet_app/features/weather/presentation/weather.dart';
 
-class MockWeatherRepository extends Mock implements WeatherRepository {}
+class MockWeatherRepository extends Mock implements WeatherRepositoryImpl {}
 
 class MockWeatherForecastModel extends Mock implements WeatherForecastModel {}
 
-class MockWeatherCubit extends MockCubit<WeatherState> implements WeatherCubit {}
+class MockWeatherCubit extends MockCubit<WeatherState>
+    implements WeatherCubit {}
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('MainScreenWidget Integration Test', () {
-    late WeatherRepository weatherRepository;
+    late WeatherRepositoryImpl weatherRepository;
     late MockWeatherCubit weatherCubit;
     late MockWeatherForecastModel weatherForecastModel;
     // Mock the WeatherForecastModel object
@@ -31,13 +32,15 @@ void main() {
       weatherForecastModel = MockWeatherForecastModel();
 
       getIt.registerLazySingleton<WeatherCubit>(() => weatherCubit);
-      getIt.registerLazySingleton<WeatherRepository>(() => weatherRepository);
+      getIt.registerLazySingleton<WeatherRepositoryImpl>(() => weatherRepository);
     });
 
-    testWidgets('MainScreenWidget shows loading spinner when WeatherCubitLoading state is emitted',
+    testWidgets(
+        'MainScreenWidget shows loading spinner when WeatherCubitLoading state is emitted',
         (WidgetTester tester) async {
       // Stub the WeatherCubit state to emit WeatherCubitLoading
-      when(() => weatherCubit.state).thenAnswer((invocation) => const WeatherCubitLoading());
+      when(() => weatherCubit.state)
+          .thenAnswer((invocation) => const WeatherCubitLoading());
 
       await tester.pumpWidget(const MyApp());
 
@@ -59,14 +62,17 @@ void main() {
     //   expect(find.byType(CityInfoWidget), findsOneWidget);
     // });
 
-    testWidgets('SearchWidget triggers weather search when search button is pressed', (WidgetTester tester) async {
+    testWidgets(
+        'SearchWidget triggers weather search when search button is pressed',
+        (WidgetTester tester) async {
       // Stub the WeatherCubit state to emit WeatherSearchLoading
 
-      when(()=>weatherForecastModel.current).thenReturn(Current(tempC: 30));
-      when(()=>weatherForecastModel.location).thenReturn(Location(name: 'Paris'));
+      when(() => weatherForecastModel.current).thenReturn(Current(tempC: 30));
+      when(() => weatherForecastModel.location)
+          .thenReturn(Location(name: 'Paris'));
 
-      when(() => weatherCubit.state)
-          .thenAnswer((invocation) => WeatherDataLoaded(forecastObject: weatherForecastModel));
+      when(() => weatherCubit.state).thenAnswer((invocation) =>
+          WeatherDataLoaded(forecastObject: weatherForecastModel));
 
       await tester.pumpWidget(const MyApp());
 

@@ -386,7 +386,7 @@ class Astro {
   String? moonrise;
   String? moonset;
   String? moonPhase;
-  String? moonIllumination;
+  int? moonIllumination;
 
   Astro(
       {this.sunrise,

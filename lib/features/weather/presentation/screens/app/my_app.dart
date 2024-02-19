@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weathet_app/di/injected_bloc_provider.dart';
-import 'package:weathet_app/features/weather/weather.dart';
-import 'package:weathet_app/ui/widgets/main_screen/main_screen_widget.dart';
+import 'package:weathet_app/features/weather/presentation/screens/main_screen/main_screen.dart';
+import 'package:weathet_app/features/weather/presentation/weather.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
       child: const MaterialApp(
         debugShowCheckedModeBanner: false,
         home: Scaffold(
-          body: MainScreenWidget(),
+          body: MainScreen(),
         ),
       ),
     );

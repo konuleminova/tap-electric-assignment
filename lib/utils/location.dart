@@ -14,7 +14,6 @@ class UserLocation {
     }
 
     permission = await Geolocator.checkPermission();
-    print('Permission ${permission}');
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
